@@ -57,10 +57,10 @@ In this phase, we explore the dataset to understand the relationships between va
 - **⚠️ Outlier Detection**: Identify and handle outliers if necessary.
 
 ## 📝 Methodology
-**1.📊 Data Preprocessing**: Handle missing values, standardize features, and address skewness.
-**2.⚙️ Clustering with K-Means**: Group songs into clusters using K-Means clustering.
-**3.📈 Evaluation**: Analyze cluster quality and adjust hyperparameters as needed.
-**4.🎨 Mood Classification**: Assign mood labels based on cluster characteristics.
+- **1.📊 Data Preprocessing**: Handle missing values, standardize features, and address skewness.
+- **2.⚙️ Clustering with K-Means**: Group songs into clusters using K-Means clustering.
+- **3.📈 Evaluation**: Analyze cluster quality and adjust hyperparameters as needed.
+- **4.🎨 Mood Classification**: Assign mood labels based on cluster characteristics.
 
 ## ⚙️ Model Development
 The model used for clustering is the K-Means algorithm. Key steps include:
