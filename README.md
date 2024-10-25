@@ -38,7 +38,8 @@ The goal of this project is to use unsupervised clustering, specifically K-Means
 - **💡 Draw insights and conclusions** from the clusters to provide a better understanding of how various musical features contribute to the mood or emotional content of a song.
 
 ## 📊Dataset Overview
-The dataset is sourced from the Spotify API and contains key audio features for each track, such as:
+The dataset is sourced from Hugging Face's open datasets platform and can be accessed [here](https://huggingface.co/datasets/maharshipandya/spotify-tracks-dataset).
+Or, Access from my [Google Drive](https://drive.google.com/file/d/10JsSQ74dAH-J9J2Yuq9-ZksYTgYRD1dl/view) and contains key audio features for each track, such as:
 
 - **🕺 Danceability**
 - **⚡ Energy**
