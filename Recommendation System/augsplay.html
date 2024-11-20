@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Background Image with Sticky Navbar</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            color: #ffffff;
+            padding-bottom: 50px;
+            background-image: url('mp3bg.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav {
+            position: fixed;
+            background-color: #222;
+            top: 0;
+            left: 0;
+            right: 0;
+            transition: all 0.3s ease-in-out;
+            z-index: 1000;
+        }
+
+        .nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+        }
+
+        .nav .logo a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 30px;
+        }
+
+        .nav.active {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav.active .logo a {
+            color: #000;
+        }
+
+        .nav .logo a:hover {
+            color: #ff501b;
+            transition: 0.5s;
+        }
+
+        .nav.active .container {
+            padding: 10px 0;
+        }
+
+        .dropdown-container {
+            display: flex;
+            justify-content: flex-start;
+            margin-top: 70px;
+        }
+
+        .dropdown {
+            margin: 0 10px;
+        }
+
+        .dropdown:first-child {
+            margin-left: 225px;
+        }
+
+        .dropdown select {
+            padding: 2px;
+            font-size: 16px;
+        }
+
+        .recommended-btn {
+            padding: 1px 4px;
+            font-size: 16px;
+            background-color: #000000;
+            color: #ff501b;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: none;
+        }
+
+        .recommended-btn:hover {
+            background-color: #ff501b;
+            color: #000;
+        }
+
+        .trending {
+            text-align: left;
+            margin-top: 40px;
+            color: #fff;
+            margin-left: 75px;
+            margin-bottom: 10px;
+        }
+
+        .song-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0 20px 0;
+            max-width: 900px;
+        }
+
+        .song-list li {
+            padding: 10px;
+            margin: 5px 0;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .song-list li:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .song-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .song-name {
+            flex-grow: 1;
+        }
+
+        .duration {
+            color: #b3b3b3;
+            margin-left: 10px;
+        }
+
+        .singer {
+            font-size: 14px;
+            color: #b3b3b3;
+            display: block;
+            margin-left: 18px;
+        }
+
+        .hero {
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            margin-top: 60px;
+            z-index: -2;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+        }
+
+        .hero h1 {
+            font-size: 46px;
+            margin: -20px 0 20px;
+        }
+
+        .hero p {
+            font-size: 20px;
+            letter-spacing: 1px;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -500px; /* Start off-screen */
+            width: 500px;
+            height: 100%;
+            background-color: black;
+            color: white;
+            transition: right 0.3s ease; /* Smooth transition */
+            z-index: 999; /* Make sure it appears above other content */
+            padding: 20px;
+        }
+
+        .sidebar.active {
+            right: 0; /* Slide in when active */
+        }
+
+        .user-data-btn {
+            background-color: #ff501b;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .user-data-btn:hover {
+            background-color: #ff6c3f; /* Change color on hover */
+        }
+
+        .word-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.word-table th, .word-table td {
+    border: 1px solid #fff; /* White border */
+    padding: 10px;
+    text-align: center;
+}
+
+.word-table th {
+    background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent background for header */
+    color: #ff501b; /* Header text color */
+}
+
+.word-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.3); /* Highlight row on hover */
+}
+
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="container">
+            <h1 class="logo"><a href="augsplay.html">AugsPlay</a></h1>
+            <button class="user-data-btn">User Data</button> <!-- Added button -->
+        </div>
+    </nav>
+
+    <div class="dropdown-container">
+        <div class="dropdown">
+            <label for="user-select">User:</label>
+            <select id="user-select">
+                <option value="">Select User</option>
+                <option value="user1">User 1</option>
+                <option value="user2">User 2</option>
+                <option value="user3">User 3</option>
+                <option value="user4">User 4</option>
+            </select>
+        </div>
+        <div class="dropdown" id="mood-dropdown" style="display: none;">
+            <label for="mood-select">Mood:</label>
+            <select id="mood-select">
+                <option value="">Select Mood</option>
+                <option value="feel-good">Feel Good</option>
+                <option value="workout">Workout</option>
+                <option value="party">Party</option>
+                <option value="sad">Sad</option>
+            </select>
+        </div>
+        <button class="recommended-btn" id="recommended-btn">Recommend</button>
+    </div>
+
+    <div class="trending">
+        <h2>Trending</h2>
+        <ul class="song-list">
+            <li>
+                <div class="song-info">
+                    <span class="song-name">1. Jhoome Jo Pathaan</span>
+                    <span class="duration">3:45</span>
+                </div>
+                <span class="singer">Arijit Singh, Sukriti Kakar</span>
+            </li>
+            <li>
+                <div class="song-info">
+                    <span class="song-name">2. Tum Kya Mile</span>
+                    <span class="duration">4:00</span>
+                </div>
+                <span class="singer">Arijit Singh, Shreya Ghoshal</span>
+            </li>
+            <li>
+                <div class="song-info">
+                    <span class="song-name">3. Besharam Rang</span>
+                    <span class="duration">3:30</span>
+                </div>
+                <span class="singer">Shreya Ghoshal, Vishal-Shekhar</span>
+            </li>
+            <li>
+                <div class="song-info">
+                    <span class="song-name">4. Raatan Lambiyan</span>
+                    <span class="duration">4:15</span>
+                </div>
+                <span class="singer">Jubin Nautiyal, Asees Kaur</span>
+            </li>
+            <li>
+                <div class="song-info">
+                    <span class="song-name">5. Tumse Bhi Zyada</span>
+                    <span class="duration">3:50</span>
+                </div>
+                <span class="singer">Arijit Singh</span>
+            </li>
+            <li>
+                <div class="song-info">
+                    <span class="song-name">6. Chaleya</span>
+                    <span class="duration">3:55</span>
+                </div>
+                <span class="singer">Shreya Ghoshal, Arijit Singh</span>
+            </li>
+            <li>
+                <div class="song-info">
+                    <span class="song-name">7. Keh Do Ke Tum</span>
+                    <span class="duration">4:05</span>
+                </div>
+                <span class="singer">Neha Kakkar, Karan Mehta</span>
+            </li>
+            <li>
+                <div class="song-info">
+                    <span class="song-name">8. Pyaar Hota Kayi Baar Hai</span>
+                    <span class="duration">3:40</span>
+                </div>
+                <span class="singer">Vishal Mishra</span>
+            </li>
+            <li>
+                <div class="song-info">
+                    <span class="song-name">9. Dil De Diya Hai</span>
+                    <span class="duration">4:20</span>
+                </div>
+                <span class="singer">Payal Dev, Vishal Mishra</span>
+            </li>
+            <li>
+                <div class="song-info">
+                    <span class="song-name">10. O Bolega Raja</span>
+                    <span class="duration">3:45</span>
+                </div>
+                <span class="singer">Sunidhi Chauhan, Pritam</span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="sidebar" id="sidebar">
+        <h2>User Data</h2>
+        <button id="close-sidebar">Close</button>
+        <table class="word-table">
+            <thead>
+                <tr>
+                    <th>Word 1</th>
+                    <th>Word 2</th>
+                    <th>Word 3</th>
+                    <th>Word 4</th>
+                    <th>Word 5</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Apple</td>
+                    <td>Banana</td>
+                    <td>Cherry</td>
+                    <td>Date</td>
+                    <td>Elderberry</td>
+                </tr>
+                <tr>
+                    <td>Fig</td>
+                    <td>Grape</td>
+                    <td>Honeydew</td>
+                    <td>Indian Fig</td>
+                    <td>Jackfruit</td>
+                </tr>
+                <tr>
+                    <td>Kiwi</td>
+                    <td>Lemon</td>
+                    <td>Mango</td>
+                    <td>Nectarine</td>
+                    <td>Olive</td>
+                </tr>
+                <tr>
+                    <td>Papaya</td>
+                    <td>Quince</td>
+                    <td>Raspberry</td>
+                    <td>Strawberry</td>
+                    <td>Tangerine</td>
+                </tr>
+                <tr>
+                    <td>Ugli Fruit</td>
+                    <td>Vanilla</td>
+                    <td>Watermelon</td>
+                    <td>Xigua</td>
+                    <td>Yuzu</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <script>
+        const nav = document.querySelector('.nav');
+        const userSelect = document.getElementById('user-select');
+        const moodDropdown = document.getElementById('mood-dropdown');
+        const moodSelect = document.getElementById('mood-select');
+        const recommendedBtn = document.getElementById('recommended-btn');
+    
+        const userDataBtn = document.querySelector('.user-data-btn');
+        const sidebar = document.getElementById('sidebar');
+        const closeSidebarBtn = document.getElementById('close-sidebar');
+    
+        window.addEventListener('scroll', fixNav);
+    
+        userSelect.addEventListener('change', function() {
+            if (userSelect.value) {
+                moodDropdown.style.display = 'block'; // Show mood dropdown
+            } else {
+                moodDropdown.style.display = 'none'; // Hide mood dropdown
+                recommendedBtn.style.display = 'none'; // Hide recommended button
+            }
+        });
+    
+        moodSelect.addEventListener('change', function() {
+            if (moodSelect.value) {
+                recommendedBtn.style.display = 'block'; // Show recommended button
+            } else {
+                recommendedBtn.style.display = 'none'; // Hide recommended button
+            }
+        });
+    
+        userDataBtn.addEventListener('click', function() {
+            sidebar.classList.toggle('active'); // Toggle sidebar visibility
+        });
+    
+        closeSidebarBtn.addEventListener('click', function() {
+            sidebar.classList.remove('active'); // Close sidebar when button clicked
+        });
+    
+        function fixNav() {
+            if (window.scrollY > nav.offsetHeight + 150) {
+                nav.classList.add('active');
+            } else {
+                nav.classList.remove('active');
+            }
+        }
+    
+        recommendedBtn.addEventListener('click', function() {
+            const selectedUser = userSelect.value; // Get selected user
+            const selectedMood = moodSelect.value; // Get selected mood
+
+            console.log('User:', selectedUser, 'Mood:', selectedMood); // Log user and mood values
+
+            if (selectedUser && selectedMood) {
+                // Send data to the Django backend
+                fetch('/recommend/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken'), // Include CSRF token for security
+                    },
+                    body: JSON.stringify({ user: selectedUser, mood: selectedMood }),
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    alert('Recommendation: ' + data.recommendation); // Show recommendation
+                })
+                .catch((error) => {
+                    alert('An error occurred: ' + error.message); // Alert for errors
+                });
+            } else {
+                alert('Please select both a user and a mood.'); // Alert if selection is incomplete
+            }
+        });
+
+    
+        // Function to get the CSRF token from cookies
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+        
+</body>
+</html>

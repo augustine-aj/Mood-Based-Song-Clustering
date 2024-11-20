@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Background Image with Sticky Navbar</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            color: #ffffff;
+            padding-bottom: 50px;
+            background-color: #000;
+            background-image: url('mp3bg.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav {
+            position: fixed;
+            background-color: #222;
+            top: 0;
+            left: 0;
+            right: 0;
+            transition: all 0.3s ease-in-out;
+            z-index: 1000;
+        }
+
+        .nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+        }
+
+        .nav .logo a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 30px;
+        }
+
+        .nav.active {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav.active .logo a {
+            color: #000;
+        }
+
+        .nav .logo a:hover {
+            color: #ff501b;
+            transition: 0.5s;
+        }
+
+        .nav.active .container {
+            padding: 10px 0;
+        }
+
+        .dropdown-container {
+            display: flex;
+            justify-content: flex-start;
+            margin-top: 70px;
+        }
+
+        .dropdown {
+            margin: 0 10px;
+        }
+
+        .dropdown:first-child {
+            margin-left: 225px;
+        }
+
+        .dropdown select {
+            padding: 2px;
+            font-size: 16px;
+        }
+
+        .recommended-btn {
+            padding: 1px 4px;
+            font-size: 16px;
+            background-color: #000000;
+            color: #ff501b;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: none;
+        }
+
+        .recommended-btn:hover {
+            background-color: #ff501b;
+            color: #000;
+        }
+
+        .dropdown select:disabled {
+    background-color: #555; /* Grey background for disabled state */
+    color: #888; /* Lighter text color */
+    cursor: not-allowed; /* Change cursor to indicate it's not clickable */
+}
+
+.recommended-btn:disabled {
+    background-color: #555; /* Grey background for disabled state */
+    color: #888; /* Lighter text color */
+    cursor: not-allowed; /* Change cursor to indicate it's not clickable */
+}
+
+
+        button:disabled {
+    background-color: #555; /* Grey background for disabled state */
+    color: #888; /* Lighter text color */
+    cursor: not-allowed; /* Change cursor to indicate it's not clickable */
+}
+
+        .trending {
+            text-align: left;
+            margin-top: 40px;
+            color: #fff;
+            margin-left: 75px;
+            margin-bottom: 10px;
+        }
+
+        .song-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0 20px 0;
+            max-width: 900px;
+        }
+
+        .song-list li {
+            padding: 10px;
+            margin: 5px 0;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .song-list li:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .song-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .song-name {
+            flex-grow: 1;
+        }
+
+        .duration {
+            color: #b3b3b3;
+            margin-left: 10px;
+        }
+
+        .singer {
+            font-size: 14px;
+            color: #b3b3b3;
+            display: block;
+            margin-left: 18px;
+        }
+
+        .hero {
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            margin-top: 60px;
+            z-index: -2;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+        }
+
+        .hero h1 {
+            font-size: 46px;
+            margin: -20px 0 20px;
+        }
+
+        .hero p {
+            font-size: 20px;
+            letter-spacing: 1px;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -500px; /* Start off-screen */
+            width: 500px;
+            height: 100%;
+            background-color: black;
+            color: white;
+            transition: right 0.3s ease; /* Smooth transition */
+            z-index: 999; /* Make sure it appears above other content */
+            padding: 20px;
+        }
+
+        .sidebar.active {
+            right: 0; /* Slide in when active */
+        }
+
+        .user-data-btn {
+            background-color: #ff501b;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .user-data-btn:hover {
+            background-color: #ff6c3f; /* Change color on hover */
+        }
+
+        .word-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.word-table th, .word-table td {
+    border: 1px solid #fff; /* White border */
+    padding: 10px;
+    text-align: center;
+}
+
+.word-table th {
+    background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent background for header */
+    color: #ff501b; /* Header text color */
+}
+
+.word-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.3); /* Highlight row on hover */
+}
+
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="container">
+            <h1 class="logo"><a href="augsplay.html">AugsPlay</a></h1>
+            <button class="user-data-btn">User Data</button> <!-- Added button -->
+        </div>
+    </nav>
+
+    <div class="dropdown-container">
+        <div class="dropdown">
+            <label for="user-select">User:</label>
+            <select id="user-select">
+                <option value="">Select User</option>
+                <option value="user_1">User_1</option>
+                <option value="user_2">User_2</option>
+                <option value="user_3">User_3</option>
+                <option value="user_4">User_4</option>
+                <option value="user_5">User_5</option>
+            </select>
+        </div>
+        <div class="dropdown" id="mood-dropdown" style="display: none;">
+            <label for="mood-select">Mood:</label>
+            <select id="mood-select">
+                <option value="">Select Mood</option>
+                <option value="Calm/Relaxed">Calm/Relaxed</option>
+                <option value="Happy/Energetic">Happy/Energetic</option>
+                <option value="Sad/Reflective">Sad/Reflective</option>
+                <option value="Angry/Intense">Angry/Intense</option>
+            </select>
+        </div>
+        <button class="recommended-btn" id="recommended-btn">Recommend</button>
+    </div>
+
+    <div class="trending">
+        <h2>Trending</h2>
+        <ul class="song-list">
+            <!-- Dynamic song list will be populated here -->
+        </ul>
+    </div>
+
+    <div class="sidebar" id="sidebar" style="
+    margin-top: 34px;">
+        <button id="close-sidebar" class="close-btn" style="
+    margin-left: 430px;">Close</button>
+        <h3 id="user-heading">Selected User: None</h3>
+        <table class="word-table">
+            <thead>
+                <tr>
+                    <th>Song Name</th>
+                    <th>Play Time</th>
+                    <th>Play Count</th>
+                    <th>Like/Dislike</th>
+                    <th>Rating</th>
+                </tr>
+            </thead>
+            <tbody id="songTableBody">
+            </tbody>
+        </table>
+    </div>
+    
+<script>
+const nav = document.querySelector('.nav');
+const userSelect = document.getElementById('user-select');
+const moodDropdown = document.getElementById('mood-dropdown');
+const moodSelect = document.getElementById('mood-select');
+const recommendedBtn = document.getElementById('recommended-btn');
+const userDataBtn = document.querySelector('.user-data-btn');
+const sidebar = document.getElementById('sidebar');
+const closeSidebarBtn = document.getElementById('close-sidebar');
+
+window.addEventListener('scroll', fixNav);
+
+// Initial state setup
+moodDropdown.style.display = 'flex'; // Show mood dropdown initially
+recommendedBtn.style.display = 'inline-block'; // Show recommended button initially
+recommendedBtn.disabled = true; // Disable the recommended button
+moodSelect.disabled = true; // Disable mood selection
+userDataBtn.disabled = true; // Disable the user data button
+
+userSelect.addEventListener('change', function() {
+    if (userSelect.value) {
+        moodSelect.disabled = false; // Enable mood selection
+    } else {
+        moodSelect.disabled = true; // Disable mood selection
+        recommendedBtn.disabled = true; // Disable the recommended button
+        userDataBtn.disabled = true; // Disable the user data button
+    }
+});
+
+moodSelect.addEventListener('change', function() {
+    if (moodSelect.value) {
+        recommendedBtn.disabled = false; // Enable the recommended button
+        userDataBtn.disabled = false; // Enable the user data button
+    } else {
+        recommendedBtn.disabled = true; // Disable the recommended button
+        userDataBtn.disabled = true; // Disable the user data button
+    }
+});
+
+userDataBtn.addEventListener('click', function() {
+    sidebar.classList.toggle('active'); // Toggle sidebar visibility
+});
+
+// New event listener for the recommend button
+recommendedBtn.addEventListener('click', function() {
+    sidebar.classList.add('active'); // Show the sidebar
+});
+
+closeSidebarBtn.addEventListener('click', function() {
+    sidebar.classList.remove('active'); // Close sidebar when button clicked
+});
+
+function fetchTrendingSongs() {
+    fetch('trending-songs/')  // Adjust the URL to match your API endpoint
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === 'success') {
+                updateSongListUI(data.songs);
+            } else {
+                console.error('Error fetching songs:', data.message);
+            }
+        })
+        .catch(error => console.error('Fetch error:', error));
+}
+
+function updateSongListUI(songs) {
+    const songListElement = document.querySelector('.song-list');
+    songListElement.innerHTML = ''; // Clear existing songs
+
+    songs.forEach((song, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <div class="song-info">
+                <span class="song-name">${index + 1}. ${song.track_name}</span>
+                <span class="duration">${song.duration}</span>
+            </div>
+            <span class="singer">${song.artists ? song.artists.replace(';', ', ') : 'Artist Unknown'}</span>
+        `;
+        songListElement.appendChild(li);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', fetchTrendingSongs);
+
+function fixNav() {
+    if (window.scrollY > nav.offsetHeight + 150) {
+        nav.classList.add('active');
+    } else {
+        nav.classList.remove('active');
+    }
+}
+
+const userHeading = document.getElementById('user-heading'); // Get the user heading element
+
+userSelect.addEventListener('change', function() {
+    const selectedUser = userSelect.value; // Get the selected user
+    if (selectedUser) {
+        moodSelect.disabled = false; // Enable mood selection
+        userHeading.innerText = `${selectedUser}`; // Update heading
+    } else {
+        moodSelect.disabled = true; // Disable mood selection
+        recommendedBtn.disabled = true; // Disable the recommended button
+        userDataBtn.disabled = true; // Disable the user data button
+        userHeading.innerText = `Selected User: None`; // Reset heading
+    }
+});
+// Handling play time increase/decrease buttons
+recommendedBtn.addEventListener('click', function() {
+    const selectedUser = userSelect.value; // Get selected user
+    const selectedMood = moodSelect.value; // Get selected mood
+
+    console.log('User:', selectedUser, 'Mood:', selectedMood); // Log user and mood values
+
+    if (selectedUser && selectedMood) {
+        // Send data to the Django backend
+        fetch('/recommend/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'), // Include CSRF token for security
+            },
+            body: JSON.stringify({ user: selectedUser, mood: selectedMood }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert('Success...');
+            updateSongListUI(data.recommendation);
+            const heading = document.querySelector('.trending h2');
+            heading.textContent = 'Recommended Songs'; // Show recommendation
+        })
+        .catch((error) => {
+            alert('An error occurred: ' + error.message); // Alert for errors
+        });
+    } else {
+        alert('Please select both a user and a mood.'); // Alert if selection is incomplete
+    }
+});
+
+userDataBtn.addEventListener('click', function () {
+    const selectedUser = userSelect.value;
+    const selectedMood = moodSelect.value;
+
+    console.log('Selected User:', selectedUser);  // Debug statement
+    console.log('Selected Mood:', selectedMood);  // Debug statement
+
+    // Fetch data from Django backend
+    fetch('/user_data/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            user: selectedUser,
+            mood: selectedMood
+        }),
+    })
+    .then(response => {
+        if (!response.ok) {
+            console.error('Network response was not ok:', response.statusText);  // Debug statement
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Received Data from Server:', data);  // Debug statement
+        songTableBody.innerHTML = ''; // Clear the existing table content
+
+        if (data.songs.length === 0) {
+            // If no songs are returned
+            const row = `<tr><td colspan="5">No songs found for the selected user and mood</td></tr>`;
+            songTableBody.innerHTML += row;
+            console.log('No songs found for selected user and mood.');  // Debug statement
+        } else {
+            // Populate table with the fetched data
+            data.songs.forEach(song => {
+                const row = `
+                    <tr>
+                        <td>${song['track_name']}</td>
+                        <td class="play-time">${song['Play Time']}
+                            <button class="time-btn" data-action="increase">+</button>
+                            <button class="time-btn" data-action="decrease">-</button>    
+                        </td>
+                        <td class="play-count">${song['Play Count']}
+                            <button class="count-btn" data-action="increase">Increase Count</button>
+                            <button class="count-btn" data-action="decrease">Decrease Count</button>    
+                        </td>
+                        <td>
+                            <select class="like-dislike">
+                                <option value="like" ${song['Like/Dislike'] === 'like' ? 'selected' : ''}>Like</option>
+                                <option value="dislike" ${song['Like/Dislike'] === 'dislike' ? 'selected' : ''}>Dislike</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="rating">
+                                ${[1, 2, 3, 4, 5].map(rating => 
+                                    `<option value="${rating}" ${song['Rating'] == rating ? 'selected' : ''}>${rating}</option>`
+                                ).join('')}
+                            </select>
+                        </td>
+                    </tr>
+                `;
+                songTableBody.innerHTML += row;
+            });
+            console.log('Songs populated in the table.');  // Debug statement
+        }
+
+        // Reattach event listeners to dynamically added elements
+        attachEventListeners();
+    })
+    .catch(error => {
+        console.error('Error during fetch operation:', error);  // Debug statement
+    });
+});
+
+function attachEventListeners() {
+    // Reattach event listeners to the dynamically added elements
+    document.querySelectorAll('.time-btn').forEach(button => {
+        button.removeEventListener('click', updatePlayTime); // Remove any existing listeners
+        button.addEventListener('click', updatePlayTime);
+    });
+
+    document.querySelectorAll('.count-btn').forEach(button => {
+        button.removeEventListener('click', updatePlayCount); // Remove any existing listeners
+        button.addEventListener('click', updatePlayCount);
+    });
+
+    document.querySelectorAll('.like-dislike').forEach(select => {
+        select.removeEventListener('change', logLikeDislike); // Remove any existing listeners
+        select.addEventListener('change', logLikeDislike);
+    });
+
+    document.querySelectorAll('.rating').forEach(select => {
+        select.removeEventListener('change', logRatingChange); // Remove any existing listeners
+        select.addEventListener('change', logRatingChange);
+    });
+}
+
+function updatePlayTime(event) {
+    const action = this.dataset.action;
+    // Find the parent <tr> element of the button
+    const row = this.closest('tr'); 
+    const playTimeElement = row.querySelector('.play-time');
+
+    if (!playTimeElement) {
+        console.error('Play time element not found!'); // Debugging line
+        return; // Exit if element is not found
+    }
+
+    let currentTime = playTimeElement.textContent.split(':');
+    let minutes = parseInt(currentTime[0]);
+    let seconds = parseInt(currentTime[1]);
+
+    if (action === 'increase') {
+        seconds += 1; // Increase by 1 second
+        if (seconds >= 60) {
+            seconds -= 60;
+            minutes += 1;
+        }
+    } else {
+        if (minutes === 0 && seconds === 0) return; // Prevent negative time
+        seconds -= 1; // Decrease by 1 second
+        if (seconds < 0) {
+            seconds += 60;
+            minutes -= 1;
+        }
+    }
+
+    playTimeElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+}
+
+function updatePlayCount(event) {
+    const action = this.dataset.action;
+    const countElement = this.parentElement.querySelector('.play-count');
+    let currentCount = parseInt(countElement.textContent);
+
+    if (action === 'increase') {
+        currentCount += 1;
+    } else {
+        currentCount = Math.max(0, currentCount - 1); // Prevent negative counts
+    }
+
+    countElement.textContent = currentCount;
+}
+
+function logLikeDislike(event) {
+    console.log(`Changed to ${this.value}`);
+}
+
+function logRatingChange(event) {
+    console.log(`Rating set to ${this.value}`);
+}
+
+// Function to get the CSRF token from cookies
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+</body>
+</html>
